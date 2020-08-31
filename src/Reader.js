@@ -13,7 +13,7 @@ class Reader {
      * @param {Object|Array} data
      * @return {Object|Array}
      */
-    Read(buff, layout, data = {}) {
+    async Read(buff, layout, data = {}) {
       switch (layout.type.toLowerCase()) {
         case 'int8':
           data = buff.ReadInt8();
@@ -90,37 +90,37 @@ class Reader {
                   buff.ReadInt32(); // entry size xd
                 }
                 let beatmap = {
-                  'artist_name': buff.ReadOsuString(),
-                  'artist_name_unicode': buff.ReadOsuString(),
-                  'song_title': buff.ReadOsuString(),
-                  'song_title_unicode': buff.ReadOsuString(),
-                  'creator_name': buff.ReadOsuString(),
-                  'difficulty': buff.ReadOsuString(),
-                  'audio_file_name': buff.ReadOsuString(),
-                  'md5': buff.ReadOsuString(),
-                  'osu_file_name': buff.ReadOsuString(),
-                  'ranked_status': buff.ReadByte(),
-                  'n_hitcircles': buff.ReadInt16(),
-                  'n_sliders': buff.ReadInt16(),
-                  'n_spinners': buff.ReadInt16(),
-                  'last_modification_time': buff.ReadInt64()
+                  'artist_name': await buff.ReadOsuString(),
+                  'artist_name_unicode': await buff.ReadOsuString(),
+                  'song_title': await buff.ReadOsuString(),
+                  'song_title_unicode': await buff.ReadOsuString(),
+                  'creator_name': await buff.ReadOsuString(),
+                  'difficulty': await buff.ReadOsuString(),
+                  'audio_file_name': await buff.ReadOsuString(),
+                  'md5': await buff.ReadOsuString(),
+                  'osu_file_name': await buff.ReadOsuString(),
+                  'ranked_status': await buff.ReadByte(),
+                  'n_hitcircles': await buff.ReadInt16(),
+                  'n_sliders': await buff.ReadInt16(),
+                  'n_spinners': await buff.ReadInt16(),
+                  'last_modification_time': await buff.ReadInt64()
                 }
 
                 if (osuver < 20140609) {
                   beatmap = {
                     ...beatmap,
-                    'approach_rate': buff.ReadByte(),
-                    'circle_size': buff.ReadByte(),
-                    'hp_drain': buff.ReadByte(),
-                    'overall_difficulty': buff.ReadByte()
+                    'approach_rate': await buff.ReadByte(),
+                    'circle_size': await buff.ReadByte(),
+                    'hp_drain': await buff.ReadByte(),
+                    'overall_difficulty': await buff.ReadByte()
                   }
                 } else {
                   beatmap = {
                     ...beatmap,
-                    'approach_rate': buff.ReadFloat(),
-                    'circle_size': buff.ReadFloat(),
-                    'hp_drain': buff.ReadFloat(),
-                    'overall_difficulty': buff.ReadFloat()
+                    'approach_rate': await buff.ReadFloat(),
+                    'circle_size': await buff.ReadFloat(),
+                    'hp_drain': await buff.ReadFloat(),
+                    'overall_difficulty': await buff.ReadFloat()
                   }
                 }
 
@@ -170,38 +170,38 @@ class Reader {
 
                 beatmap = {
                   ...beatmap,
-                  'beatmap_id': buff.ReadInt32(),
-                  'beatmapset_id': buff.ReadInt32(),
-                  'thread_id': buff.ReadInt32(),
-                  'grade_standard': buff.ReadByte(),
-                  'grade_taiko': buff.ReadByte(),
-                  'grade_ctb': buff.ReadByte(),
-                  'grade_mania': buff.ReadByte(),
-                  'local_beatmap_offset': buff.ReadInt16(),
-                  'stack_leniency': buff.ReadFloat(),
-                  'mode': buff.ReadByte(),
-                  'song_source': buff.ReadOsuString(),
-                  'song_tags': buff.ReadOsuString(),
-                  'online_offset': buff.ReadInt16(),
-                  'title_font': buff.ReadOsuString(),
-                  'unplayed': buff.ReadBoolean(),
-                  'last_played': buff.ReadInt64(),
-                  'osz2': buff.ReadBoolean(),
-                  'folder_name': buff.ReadOsuString(),
-                  'last_checked_against_repository': buff.ReadInt64(),
-                  'ignore_sound': buff.ReadBoolean(),
-                  'ignore_skin': buff.ReadBoolean(),
-                  'disable_storyboard': buff.ReadBoolean(),
-                  'disable_video': buff.ReadBoolean(),
-                  'visual_override': buff.ReadBoolean()
+                  'beatmap_id': await buff.ReadInt32(),
+                  'beatmapset_id': await buff.ReadInt32(),
+                  'thread_id': await buff.ReadInt32(),
+                  'grade_standard': await buff.ReadByte(),
+                  'grade_taiko': await buff.ReadByte(),
+                  'grade_ctb': await buff.ReadByte(),
+                  'grade_mania': await buff.ReadByte(),
+                  'local_beatmap_offset': await buff.ReadInt16(),
+                  'stack_leniency': await buff.ReadFloat(),
+                  'mode': await buff.ReadByte(),
+                  'song_source': await buff.ReadOsuString(),
+                  'song_tags': await buff.ReadOsuString(),
+                  'online_offset': await buff.ReadInt16(),
+                  'title_font': await buff.ReadOsuString(),
+                  'unplayed': await buff.ReadBoolean(),
+                  'last_played': await buff.ReadInt64(),
+                  'osz2': await buff.ReadBoolean(),
+                  'folder_name': await buff.ReadOsuString(),
+                  'last_checked_against_repository': await buff.ReadInt64(),
+                  'ignore_sound': await buff.ReadBoolean(),
+                  'ignore_skin': await buff.ReadBoolean(),
+                  'disable_storyboard': await buff.ReadBoolean(),
+                  'disable_video': await buff.ReadBoolean(),
+                  'visual_override': await buff.ReadBoolean()
                 }
 
                 if (osuver < 20140609) {
                   buff.ReadInt16()
                 }
-                beatmap['last_modification_time_2'] = buff.ReadInt32();
+                beatmap['last_modification_time_2'] = await buff.ReadInt32();
 
-                beatmap['mania_scroll_speed'] = buff.ReadByte()
+                beatmap['mania_scroll_speed'] = await buff.ReadByte()
 
                 data.push(beatmap);
             }
