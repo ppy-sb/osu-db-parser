@@ -224,25 +224,23 @@ class Reader {
       if (raw instanceof Buffer) {
         buff = OsuBuffer.from(raw);
       }
-      let data = {};
       if (layout instanceof Array) {
-        layout.forEach(item => {
+        return layout.reduce(async (data, item) => {
           if(item.uses) {
             let needelements = item.uses.split(",")
             let dater = {}
             for (let datak of needelements) {
               dater[datak] = data[datak]
             }
-            
-            data[item.name] = this.Read(buff, item, item.uses ? dater : null);
+            data[item.name] = await this.Read(buff, item, item.uses ? dater : null);
           } else {
-            data[item.name] = this.Read(buff, item);
+            data[item.name] = await this.Read(buff, item);
           }
-        });
+          return data
+        },{});
       } else if (layout instanceof Object) {
-        data = this.Read(buff, layout);
+        return this.Read(buff, layout);
       }
-      return data;
     }
 
   }
