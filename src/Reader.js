@@ -16,49 +16,49 @@ class Reader {
     async Read(buff, layout, data = {}) {
       switch (layout.type.toLowerCase()) {
         case 'int8':
-          data = buff.ReadInt8();
+          data = await buff.ReadInt8();
           break;
         case 'uint8':
-          data = buff.ReadUInt8();
+          data = await buff.ReadUInt8();
           break;
         case 'int16':
-          data = buff.ReadInt16();
+          data = await buff.ReadInt16();
           break;
         case 'uint16':
-          data = buff.ReadUInt16();
+          data = await buff.ReadUInt16();
           break;
         case 'int32':
-          data = buff.ReadInt32();
+          data = await buff.ReadInt32();
           break;
         case 'uint32':
-          data = buff.ReadUInt32();
+          data = await buff.ReadUInt32();
           break;
         case 'int64':
-          data = buff.ReadInt64();
+          data = await buff.ReadInt64();
           break;
         case 'uint64':
-          data = buff.ReadUInt64();
+          data = await buff.ReadUInt64();
           break;
         case 'string':
-          data = buff.ReadOsuString();
+          data = await buff.ReadOsuString();
           break;
         case 'float':
-          data = buff.ReadFloat();
+          data = await buff.ReadFloat();
           break;
         case 'double':
-          data = buff.ReadDouble();
+          data = await buff.ReadDouble();
           break;
         case 'boolean':
-          data = buff.ReadBoolean();
+          data = await buff.ReadBoolean();
           break;
         case 'byte':
-          data = buff.ReadByte();
+          data = await buff.ReadByte();
           break;
         case 'int32array': {
-          let len = buff.ReadInt16();
+          let len = await buff.ReadInt16();
           data = [];
           for (let i = 0; i < len; i++) {
-            data.push(buff.ReadInt32());
+            data.push(await buff.ReadInt32());
           }
           break;
         }
@@ -67,13 +67,13 @@ class Reader {
           data = [];
           for (let i=0; i < collectionsCount; i++) {
             let collection = {
-              'name': buff.ReadOsuString(),
-              'beatmapsCount': buff.ReadInt32(),
+              'name': await buff.ReadOsuString(),
+              'beatmapsCount': await buff.ReadInt32(),
               'beatmapsMd5': []
             }
 
             for (let i=0; i<collection['beatmapsCount']; i++) {
-              let bmmd5 = buff.ReadOsuString();
+              let bmmd5 = await buff.ReadOsuString();
               collection['beatmapsMd5'].push(bmmd5)
             }
 
@@ -87,7 +87,7 @@ class Reader {
             data = [];
             for (let i = 0; i < beatmapscount; i++) {
                 if (osuver < 20191107) {
-                  buff.ReadInt32(); // entry size xd
+                  await buff.ReadInt32(); // entry size xd
                 }
                 let beatmap = {
                   'artist_name': await buff.ReadOsuString(),
@@ -124,19 +124,19 @@ class Reader {
                   }
                 }
 
-                beatmap['slider_velocity'] = buff.ReadDouble()
+                beatmap['slider_velocity'] = await buff.ReadDouble()
                 
                 if (osuver >= 20140609) {
                   let difficulties = []
                   
                   for(let i = 0; i<4; i++) {
-                    let length = buff.ReadInt32()
+                    let length = await buff.ReadInt32()
                     let diffs = {}
                     for(let i=0; i<length; i++) {
-                        buff.ReadByte()
-                        let mode = buff.ReadInt32();
+                        await buff.ReadByte()
+                        let mode = await buff.ReadInt32();
                         buff.ReadByte();
-                        let diff = buff.ReadDouble();
+                        let diff = await buff.ReadDouble();
                         diffs[mode] = diff
                     }
                     difficulties.push(diffs)
@@ -153,18 +153,18 @@ class Reader {
                 
                 beatmap = {
                   ...beatmap,
-                  'drain_time': buff.ReadInt32(),
-                  'total_time': buff.ReadInt32(),
-                  'preview_offset': buff.ReadInt32(),
+                  'drain_time': await buff.ReadInt32(),
+                  'total_time': await buff.ReadInt32(),
+                  'preview_offset': await buff.ReadInt32(),
                 }
 
                 let timingPoints = [];
-                let timingPointsLength = buff.ReadInt32()
+                let timingPointsLength = await buff.ReadInt32()
                 for (let i = 0; i < timingPointsLength; i++) {
                   timingPoints.push([
-                    buff.ReadDouble(), //BPM
-                    buff.ReadDouble(), // offset
-                    buff.ReadBoolean() // Boolean
+                    await buff.ReadDouble(), //BPM
+                    await buff.ReadDouble(), // offset
+                    await buff.ReadBoolean() // Boolean
                   ])
                 }
 
@@ -197,7 +197,7 @@ class Reader {
                 }
 
                 if (osuver < 20140609) {
-                  buff.ReadInt16()
+                  await buff.ReadInt16()
                 }
                 beatmap['last_modification_time_2'] = await buff.ReadInt32();
 
