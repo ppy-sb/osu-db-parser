@@ -33,12 +33,12 @@ class OsuDBParser {
      * @param {OsuBuffer} buffer
      * @return {Boolean}
      */
-    setBuffer(type, buffer) {
+    async setBuffer(type, buffer) {
         switch(type) {
             case "osudb": {
                 try {
                     this.dbfile = osuBuffer.from(buffer);
-                    let dbosuData = this.reader.UnmarshalPacket(this.dbfile, osuDbStruct)
+                    let dbosuData = await this.reader.UnmarshalPacket(this.dbfile, osuDbStruct)
                     dbosuData.isLocked = !dbosuData.isLocked
                     this.osuDBData = dbosuData
                     this.canGetDBData = true;
@@ -51,7 +51,7 @@ class OsuDBParser {
             case "collection": {
                 try {
                     this.collectionDB = osuBuffer.from(osuCollectionBuffer); 
-                    let collectionData = this.reader.UnmarshalPacket(this.collectionDB, collectionsStruct)
+                    let collectionData = await this.reader.UnmarshalPacket(this.collectionDB, collectionsStruct)
                     this.collectionData = collectionData
                     this.canGetCollectionData = true;
                 } catch (e) {
