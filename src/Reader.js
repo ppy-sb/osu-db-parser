@@ -226,6 +226,7 @@ class Reader {
       }
       if (layout instanceof Array) {
         return layout.reduce(async (data, item) => {
+          data = await data
           if(item.uses) {
             let needelements = item.uses.split(",")
             let dater = {}
